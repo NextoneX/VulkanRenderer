@@ -463,7 +463,7 @@ void Application::MainLoop() {
 			time = GetTimeMicroseconds();
 		}
 		timeLastFrame = time;
-		printf( "\ndt_ms: %.1f    ", dt_us * 0.001f );
+		//printf( "\ndt_ms: %.1f    ", dt_us * 0.001f );
 
 		// Get User Input
 		glfwPollEvents();
@@ -506,6 +506,8 @@ void Application::MainLoop() {
 			numSamples++;
 
 			printf( "frame dt_ms: %.2f %.2f %.2f", avgTime * 0.001f, maxTime * 0.001f, dt_us * 0.001f );
+			auto& out = m_scene->m_bodies[0].m_linearVelocity;
+			printf(" vel:%.2f %.2f %.2f\n", out.x, out.y, out.z);
 		}
 
 		// Draw the Scene

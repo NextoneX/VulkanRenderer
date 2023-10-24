@@ -34,17 +34,32 @@ void ResolveContact( contact_t & contact ) {
 	const Vec3 angularJB = (invWorldInertiaB * rb.Cross( n )).Cross( rb );
 	const float angularFactor = (angularJA + angularJB).Dot( n );
 
+	// Get the world space velocity of the motion and rotation
 	const Vec3 velA = bodyA->m_linearVelocity + bodyA->m_angularVelocity.Cross( ra );
 	const Vec3 velB = bodyB->m_linearVelocity + bodyB->m_angularVelocity.Cross( rb );
 
+	// Calculate the collision impulse
 	const Vec3 vab = velA - velB;
 	const float impulseJ = (1.0f + elasticity) * vab.Dot( n ) / (sumInvMass + angularFactor);
 	const Vec3 vectorImpulseJ = n * impulseJ;
 
-	bodyA->ApplyImpulse( ptOnA, vectorImpulseJ * -1.0f );
-	bodyB->ApplyImpulse( ptOnB, vectorImpulseJ );
+	// Calculate the impulse caused by friction
 
-	const Vec3 ds = contact.ptOnB_WorldSpace - contact.ptOnA_WorldSpace;
+	const float friction = bodyA->m_friction * bodyB->m_friction;
+	const Vec3 velTang = vab - n * n.Dot(vab);
+
+	Vec3 relativeVelTang = velTang;
+	relativeVelTang.Normalize();
+
+	const Vec3 inertiaA = (invWorldInertiaA * ra.Cross(relativeVelTang)).Cross(ra);
+	const Vec3 inertiaB = (invWorldInertiaB * rb.Cross(relativeVelTang)).Cross(rb);
+
+	const Vec3 impulseFriction = velTang * friction / (sumInvMass + (inertiaA + inertiaB).Dot(velTang));
+
+	bodyA->ApplyImpulse( ptOnA, (vectorImpulseJ + impulseFriction) * -1.0f);
+	bodyB->ApplyImpulse( ptOnB, vectorImpulseJ + impulseFriction );
+
+	const Vec3 ds = ptOnB - ptOnA;
 	bodyA->m_position += ds * bodyA->m_invMass / sumInvMass;
 	bodyB->m_position -= ds * bodyB->m_invMass / sumInvMass;
 }

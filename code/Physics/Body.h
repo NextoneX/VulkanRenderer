@@ -26,6 +26,7 @@ public:
 	Vec3		m_angularVelocity;
 	float		m_invMass;
 	float		m_elasticity;
+	float		m_friction;
 	Shape *		m_shape;
 
 	Vec3 GetCenterOfMassWorldSpace() const;
