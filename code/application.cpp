@@ -505,9 +505,9 @@ void Application::MainLoop() {
 			avgTime = ( avgTime * float( numSamples ) + dt_us ) / float( numSamples + 1 );
 			numSamples++;
 
-			printf( "frame dt_ms: %.2f %.2f %.2f", avgTime * 0.001f, maxTime * 0.001f, dt_us * 0.001f );
-			auto& out = m_scene->m_bodies[0].m_linearVelocity;
-			printf(" vel:%.2f %.2f %.2f\n", out.x, out.y, out.z);
+			printf( "\nframe dt_ms: %.2f %.2f %.2f", avgTime * 0.001f, maxTime * 0.001f, dt_us * 0.001f );
+			/*auto& out = m_scene->m_bodies[0].m_linearVelocity;
+			printf(" vel:%.2f %.2f %.2f", out.x, out.y, out.z);*/
 		}
 
 		// Draw the Scene

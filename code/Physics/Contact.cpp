@@ -59,7 +59,9 @@ void ResolveContact( contact_t & contact ) {
 	bodyA->ApplyImpulse( ptOnA, (vectorImpulseJ + impulseFriction) * -1.0f);
 	bodyB->ApplyImpulse( ptOnB, vectorImpulseJ + impulseFriction );
 
-	const Vec3 ds = ptOnB - ptOnA;
-	bodyA->m_position += ds * bodyA->m_invMass / sumInvMass;
-	bodyB->m_position -= ds * bodyB->m_invMass / sumInvMass;
+	if (0.0f == contact.timeOfImpact) {
+		const Vec3 ds = ptOnB - ptOnA;
+		bodyA->m_position += ds * bodyA->m_invMass / sumInvMass;
+		bodyB->m_position -= ds * bodyB->m_invMass / sumInvMass;
+	}
 }
